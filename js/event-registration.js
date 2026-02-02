@@ -1,0 +1,1 @@
+(function(Drupal,once){Drupal.behaviors.eventRegistration={attach(){}};})(Drupal,once);

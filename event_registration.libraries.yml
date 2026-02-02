@@ -1,0 +1,9 @@
+frontend:
+  css:
+    theme:
+      css/event-registration.css: {}
+  js:
+    js/event-registration.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

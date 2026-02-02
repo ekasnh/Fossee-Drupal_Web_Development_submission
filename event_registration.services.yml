@@ -1,0 +1,12 @@
+services:
+  event_registration.event_service:
+    class: Drupal\event_registration\Service\EventService
+    arguments: ['@database']
+
+  event_registration.registration_service:
+    class: Drupal\event_registration\Service\RegistrationService
+    arguments: ['@database']
+
+  event_registration.mail_service:
+    class: Drupal\event_registration\Service\MailService
+    arguments: ['@mail_manager', '@config.factory', '@language_manager']

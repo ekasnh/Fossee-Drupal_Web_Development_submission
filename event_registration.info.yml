@@ -1,0 +1,5 @@
+name: Event Registration
+type: module
+description: Custom event registration system with admin configuration and public registration.
+core_version_requirement: ^10
+package: Custom
