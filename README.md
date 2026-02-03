@@ -92,19 +92,19 @@ The module uses custom database tables, created via the module install hook and 
 
 ## Available URLs
 
-### Admin Pages
+### Admin Pages(username: admin,Password - : admin)
 
 | Purpose | URL |
 |---------|-----|
-| Event Configuration | `/admin/config/event-registration/events` |
-| Module Settings | `/admin/config/event-registration/settings` |
-| Admin Listing Page | `/admin/event-registrations` |
+| Event Configuration | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/config/event-registration` |
+| Mails(I have used github codespace because of that I have used hook mail so all mail will come here) | `https://literate-invention-xxp6qrv9v9p2pvqx-8027.app.github.dev/` |
+| Admin Listing Page | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/config/event-registration` |
 
 ### Public Page
 
 | Purpose | URL |
 |---------|-----|
-| Event Registration Form | `/event/register` |
+| Event Registration Form | `(https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/event/register)` |
 
 The registration form is automatically available only between the configured registration start and end dates.
 
