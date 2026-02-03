@@ -1,4 +1,3 @@
-```markdown
 # Event Registration – Custom Drupal 10 Module
 
 ## Overview
