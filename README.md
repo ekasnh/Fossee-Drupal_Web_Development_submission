@@ -1,200 +1,216 @@
+```markdown
 # Event Registration – Custom Drupal 10 Module
 
 ## Overview
 
-`event_registration` is a fully custom **Drupal 10** module that enables administrators to configure events and allows users to register for them through a dynamic, AJAX-powered form.  
-The module stores registrations in custom database tables, prevents duplicate entries, and sends confirmation emails using Drupal’s Mail API.
+`event_registration` is a fully custom **Drupal 10** module that allows administrators to configure events and enables users to register for those events through a dynamic, AJAX-powered registration form.
 
-This module is built **without any contrib modules**, follows **Drupal 10 coding standards**, and uses **Dependency Injection** and **PSR-4 autoloading** throughout.
+The module stores registration data in custom database tables, prevents duplicate registrations, and sends confirmation emails using Drupal's Mail API. It is built strictly without any contrib modules and follows Drupal 10 best practices.
 
 ---
 
 ## Deployment Environment
 
-This project has been **developed, deployed, and tested using GitHub Codespaces**.
+This module has been **developed, deployed, and tested using GitHub Codespaces**.
 
 ### Why GitHub Codespaces
-- Consistent development environment
-- PHP 8.x and Composer support
-- Easy Drupal 10 setup
-- Suitable for evaluation and code review
+- Provides a consistent and reproducible development environment
+- Supports PHP 8.1+, Composer, and MySQL
+- Suitable for Drupal 10 development and evaluation
+- Ideal for technical assessments and code reviews
 
-The module runs inside a **Drupal 10 instance deployed in GitHub Codespaces** and can be reproduced locally or on any Linux-based server.
+The same setup can be replicated locally or on any Linux-based production server.
 
 ---
 
 ## Installation Steps
 
-2. Start Drupal in GitHub Codespaces
+### 1. Clone the Repository
 
+```bash
+git clone <your-github-repo-url>
+cd <repository-name>
+```
+
+### 2. Start Drupal in GitHub Codespaces
 Open the repository in GitHub Codespaces
 
-Ensure PHP 8.1+, MySQL, and Composer are available
+Ensure the following are available:
+- PHP 8.1+
+- MySQL
+- Composer
 
-3. Install Dependencies
+### 3. Install Dependencies
+```bash
 composer install
+```
 
-4. Place the Module
-
+### 4. Place the Module
 Ensure the module is located at:
-
+```
 /web/modules/custom/event_registration
+```
 
-5. Enable the Module
+### 5. Enable the Module
+```bash
 drush en event_registration -y
+```
 
-Database Tables
+---
 
-The module uses custom database tables created via the install hook and also provided as an SQL file.
+## Database Tables
 
-1. Event Configuration Table (event_config)
-Column	Description
-id	Primary key
-event_name	Name of the event
-category	Event category
-registration_start	Registration start date
-registration_end	Registration end date
-event_date	Actual event date
-2. Event Registration Table (event_registration)
-Column	Description
-id	Primary key
-event_id	Foreign key to event_config
-full_name	Participant name
-email	Participant email
-college_name	College name
-department	Department
-created	Submission timestamp
+The module uses custom database tables, created via the module install hook and also provided as an SQL file.
 
-Duplicate Prevention
+### 1. Event Configuration Table (`event_config`)
 
-Unique combination of Email + Event ID
+| Column | Description |
+|--------|-------------|
+| id | Primary key |
+| event_name | Name of the event |
+| category | Event category |
+| registration_start | Registration start date |
+| registration_end | Registration end date |
+| event_date | Actual event date |
 
-Available URLs
-Admin Pages
-Purpose	URL
-Event Configuration	/admin/config/event-registration/events
-Module Settings	/admin/config/event-registration/settings
-Admin Listing Page	/admin/event-registrations
-Public Page
-Purpose	URL
-Event Registration Form	/event/register
+### 2. Event Registration Table (`event_registration`)
 
-The registration form is automatically available only between the configured start and end dates.
+| Column | Description |
+|--------|-------------|
+| id | Primary key |
+| event_id | Foreign key to event_config |
+| full_name | Participant name |
+| email | Participant email |
+| college_name | College name |
+| department | Department |
+| created | Submission timestamp |
 
-Functional Flow
-Event Configuration (Admin)
+### Duplicate Prevention
+- Duplicate registrations are prevented using a unique combination of **Email + Event ID**
+- Enforced at both application and database level
 
-Admin creates events with:
+---
 
-Name
+## Available URLs
 
-Category
+### Admin Pages
 
-Registration window
+| Purpose | URL |
+|---------|-----|
+| Event Configuration | `/admin/config/event-registration/events` |
+| Module Settings | `/admin/config/event-registration/settings` |
+| Admin Listing Page | `/admin/event-registrations` |
 
-Event date
+### Public Page
 
-Stored in event_config table
+| Purpose | URL |
+|---------|-----|
+| Event Registration Form | `/event/register` |
 
-Event Registration (User)
+The registration form is automatically available only between the configured registration start and end dates.
 
-User selects:
+---
 
-Category → Event Date → Event Name (AJAX driven)
+## Functional Flow
 
-Form validates:
+### Event Configuration (Admin)
+Administrators can create events with the following details:
+- Event Name
+- Category
+- Registration start and end date
+- Event date
 
-Email format
+All event data is stored in the `event_config` table.
 
-Special characters in text fields
+### Event Registration (User)
+Users register for events by selecting:
+- **Category → Event Date → Event Name** (AJAX-driven dropdowns)
 
-Duplicate registration (Email + Event Date)
+The form validates:
+- Email format
+- Special characters in text fields
+- Duplicate registration (Email + Event Date)
 
-Validation Logic
+### Validation Logic
+- Email validation using Drupal's email validator
+- Text fields allow only alphabets and spaces
+- Duplicate prevention enforced at:
+  - Application level
+  - Database level
+- All validation messages are user-friendly
 
-Email validation using Drupal’s email validator
+---
 
-Text fields allow only alphabets and spaces
+## Email Notification Logic
 
-Duplicate prevention enforced at application and database level
+Emails are sent using the **Drupal Mail API**.
 
-All validation messages are user-friendly
+### Recipients
+- **User** (always)
+- **Admin** (optional and configurable)
 
-Email Notification Logic
+### Email Content Includes
+- Participant Name
+- Event Name
+- Event Date
+- Event Category
 
-Emails are sent using Drupal Mail API.
-
-Recipients
-
-User (always)
-
-Admin (optional, configurable)
-
-Email Content Includes
-
-Participant Name
-
-Event Name
-
-Event Date
-
-Event Category
-
-Admin Email Configuration
-
-Managed via:
-
+### Admin Email Configuration
+Admin email settings are managed via:
+```
 /admin/config/event-registration/settings
+```
+- Stored using the **Config API**
+- No hard-coded values are used
 
+---
 
-Stored using Config API (no hard-coded values).
+## Admin Listing Page
 
-Admin Listing Page
+The admin listing page is accessible only to users with a custom permission.
 
-Accessible only to users with a custom permission.
+### Features
+**Filters:**
+- Event Date
+- Event Name (AJAX-based)
 
-Features
+**Displays:**
+- Total participant count
+- Tabular registration data
 
-Filter by:
+**Allows exporting all filtered results as CSV**
 
-Event Date
+---
 
-Event Name (AJAX-based)
+## Permissions
 
-Displays:
-
-Total participant count
-
-Tabular registration data
-
-Export all filtered results as CSV
-
-Permissions
-
-Custom permission:
-
+Custom permission used by the module:
+```
 access event registration admin
+```
+This permission controls access to admin listing and reporting pages.
 
+---
 
-Controls access to admin listing and reporting pages.
+## Technical Highlights
 
-Technical Highlights
+- Drupal 10.x only
+- No contrib modules
+- Custom database tables
+- AJAX callbacks for dependent dropdowns
+- PSR-4 compliant services
+- **Dependency Injection** used throughout  
+  (No `\Drupal::service()` in business logic)
+- Clean separation of:
+  - Forms
+  - Services
+  - Controllers
 
-Drupal 10.x only
+---
 
-No contrib modules
+## Repository Structure
 
-Custom database tables
-
-AJAX callbacks for dynamic dropdowns
-
-PSR-4 compliant services
-
-Dependency Injection (no \Drupal::service() in business logic)
-
-Clean separation of Forms, Services, and Controllers
-
-Repository Structure
+```
 event_registration/
 ├── src/
 │   ├── Form/
@@ -208,3 +224,21 @@ event_registration/
 ├── event_registration.permissions.yml
 ├── event_registration.services.yml
 ├── README.md
+```
+
+---
+
+## Notes
+
+- The module has been tested end-to-end in **GitHub Codespaces**
+- Suitable for:
+  - Technical evaluations
+  - Drupal interviews
+  - Enterprise demonstrations
+- Easily deployable to any Linux-based Drupal 10 hosting
+
+---
+
+## Author: 
+www.ekanshagarwal.co.in
+```
