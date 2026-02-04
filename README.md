@@ -99,6 +99,12 @@ The module uses custom database tables, created via the module install hook and 
 | Event Configuration | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/config/event-registration` |
 | Mails(I have used github codespace because of that I have used hook mail so all mail will come here) | `https://literate-invention-xxp6qrv9v9p2pvqx-8027.app.github.dev/` |
 | Admin Listing Page | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/config/event-registration` |
+| Export all registrations & listing of all participations| `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/events/registrations` |
+| ConfigAPI | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/config/event-registration/settings` |
+| Export file directly | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/events/export/{event_id}` |
+| Permissions Management | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/people/permissions` |
+| Performance (Cache) Settings | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/config/development/performance` |
+| System Reports (Recent Log Messages) | `https://literate-invention-xxp6qrv9v9p2pvqx-80.app.github.dev/admin/reports/dblog` |
 
 ### Public Page
 
@@ -131,12 +137,33 @@ The form validates:
 - Duplicate registration (Email + Event Date)
 
 ### Validation Logic
-- Email validation using Drupal's email validator
-- Text fields allow only alphabets and spaces
-- Duplicate prevention enforced at:
-  - Application level
-  - Database level
-- All validation messages are user-friendly
+# 1. Validation Logic
+
+The validation logic ensures data integrity and a smooth user experience by checking inputs before they are saved to the database. It is handled within the `validateForm()` method of the `RegistrationForm` class.
+
+* **Security & Data Integrity**: We use a Regular Expression (`preg_match('/[^a-zA-Z0-9\s]/', ...)`) to block special characters in text fields like Name, College, and Department. This prevents potential XSS (Cross-Site Scripting) or injection attempts.
+
+* **Duplicate Prevention**: The logic performs a database query to check if a specific Email + Event Date combination already exists. If found, it triggers `$form_state->setErrorByName()`, which stops the submission and highlights the field in red.
+
+* **Built-in API Checks**: By using `#type => 'email'` in the form array, Drupal automatically invokes its internal `EmailValidator` service to ensure the address follows a standard format (e.g., `user@domain.com`).
+
+## 2. Email Notification Logic
+
+The email system is split into two parts: Definition (The Template) and Execution (The Trigger).
+
+* **Definition (`hook_mail`)**: Located in the `.module` file, this acts as the template engine. It intercepts the mail request and populates the `$message` array with a Subject and Body using the dynamic `$params` (like the user's name or event title).
+
+* **Execution (`MailManager`)**: In the `submitForm()` method, we call the `plugin.manager.mail` service. This service is responsible for gathering the configuration and sending the data to the server's mail system.
+
+* **Environment Catching (Mailpit)**: In your DDEV/Codespaces environment, the email doesn't actually leave the server. Instead, it is "caught" by Mailpit. This allows you to verify the logic and content without needing a real SMTP server or risking sending test emails to real addresses.
+
+## 3. Config API Integration
+
+Rather than hard-coding who receives admin alerts, we use the Config API.
+
+* The `AdminSettingsForm` saves values to `event_registration.settings`.
+* During the registration process, the code pulls these values using `\Drupal::config()`.
+* If "Enable Admin Notifications" is checked, a second email is automatically triggered to the address stored in the configuration.
 
 ---
 
@@ -193,7 +220,7 @@ This permission controls access to admin listing and reporting pages.
 
 ## Technical Highlights
 
-- Drupal 10.x only
+- Drupal 10+ only
 - No contrib modules
 - Custom database tables
 - AJAX callbacks for dependent dropdowns
@@ -237,6 +264,8 @@ event_registration/
 - Easily deployable to any Linux-based Drupal 10 hosting
 
 ---
+
+
 
 ## Author: 
 www.ekanshagarwal.co.in
