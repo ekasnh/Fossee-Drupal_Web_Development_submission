@@ -1,0 +1,26 @@
+{
+  "name": "html",
+  "version": "1.0.0",
+  "description": "`event_registration` is a fully custom **Drupal 10** module that enables administrators to configure events and allows users to register for them through a dynamic, AJAX-powered form.   The module stores registrations in custom database tables, prevents duplicate entries, and sends confirmation emails using Drupal’s Mail API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekasnh/Fossee-Drupal_Web_Development_submission.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ekasnh/Fossee-Drupal_Web_Development_submission/issues"
+  },
+  "homepage": "https://github.com/ekasnh/Fossee-Drupal_Web_Development_submission#readme",
+  "devDependencies": {
+    "lightningcss": "^1.31.1",
+    "or": "^0.2.0",
+    "sass": "^1.97.3"
+  }
+}

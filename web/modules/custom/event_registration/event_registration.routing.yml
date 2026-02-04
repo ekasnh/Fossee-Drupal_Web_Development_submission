@@ -1,0 +1,43 @@
+# 1. Public Registration Form
+event_registration.register_form:
+  path: '/event/register'
+  defaults:
+    _form: '\Drupal\event_registration\Form\RegistrationForm'
+    _title: 'Event Registration'
+  requirements:
+    _permission: 'access content'
+
+# 2. Admin Settings (Config API)
+event_registration.admin_settings:
+  path: '/admin/config/event-registration/settings'
+  defaults:
+    _form: '\Drupal\event_registration\Form\AdminSettingsForm'
+    _title: 'Notification Settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+# 3. Admin Configuration (Adding Events)
+event_registration.config_form:
+  path: '/admin/config/event-registration'
+  defaults:
+    _form: '\Drupal\event_registration\Form\EventConfigForm'
+    _title: 'Event Configuration'
+  requirements:
+    _permission: 'administer site configuration'
+
+# 4. Admin Listing Page
+event_registration.admin_list:
+  path: '/admin/events/registrations'
+  defaults:
+    _form: '\Drupal\event_registration\Form\AdminListForm'
+    _title: 'Participant Listing'
+  requirements:
+    _permission: 'access event registration listings'
+
+# 5. CSV Export Controller
+event_registration.export_csv:
+  path: '/admin/events/export/{event_id}'
+  defaults:
+    _controller: '\Drupal\event_registration\Controller\ExportController::export'
+  requirements:
+    _permission: 'access event registration listings'

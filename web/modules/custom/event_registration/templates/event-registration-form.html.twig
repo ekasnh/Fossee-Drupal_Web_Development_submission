@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Template for the Event Registration Form.
+ */
+#}
+<div class="er-container">
+  <header class="er-header">
+    <h2 class="er-title">Register for Event</h2>
+    <p class="er-description">Please fill out the details below to secure your spot.</p>
+  </header>
+
+  <form{{ attributes.addClass('er-form') }}>
+    <div class="er-form__content">
+      {# Render fields specifically if you want control, or use the catch-all #}
+      {{ form.form_build_id }}
+      {{ form.form_token }}
+      {{ form.form_id }}
+      
+      {# This renders all fields not already rendered #}
+      {{ form|without('actions', 'form_build_id', 'form_token', 'form_id') }}
+    </div>
+
+    {% if form.actions %}
+      <div class="er-form__actions">
+        {{ form.actions }}
+      </div>
+    {% endif %}
+  </form>
+</div>
