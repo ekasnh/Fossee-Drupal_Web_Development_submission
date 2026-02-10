@@ -1,5 +1,6 @@
 # Event Registration – Custom Drupal 10 Module
-
+![Screenity video - Feb 10, 2026, 11 33 PM](https://github.com/user-attachments/assets/67a252fb-b6b2-4954-bc41-e96e2a450c2a)
+Check the implementation video if you cannot access th link - : https://youtu.be/a5sRtkj4G0Y
 ## Overview
 
 `event_registration` is a fully custom **Drupal 10** module that allows administrators to configure events and enables users to register for those events through a dynamic, AJAX-powered registration form.
